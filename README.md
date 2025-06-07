@@ -59,8 +59,32 @@ The main purpose of this application is to provide a backend API for user authen
 - `DELETE /api/places/:id`
   - Deletes a place by ID.
 
+### Users (Protected, ADMIN only)
+- `GET /api/users`
+  - Returns a list of all users (excluding passwords).
+  - Requires: Auth token (ADMIN role)
+
+- `GET /api/users/:id`
+  - Returns details of a specific user by ID (excluding password).
+  - Requires: Auth token (ADMIN role)
+
+- `POST /api/users`
+  - Creates a new user.
+  - Body: `{ username, password, role }`
+  - Requires: Auth token (ADMIN role)
+
+- `PUT /api/users/:id`
+  - Updates an existing user by ID.
+  - Body: `{ username, role }`
+  - Requires: Auth token (ADMIN role)
+
+- `DELETE /api/users/:id`
+  - Deletes a user by ID.
+  - Requires: Auth token (ADMIN role)
+
 ## Middleware
-- **Authentication Middleware:** Protects the `/api/places` routes.
+- **Authentication Middleware:** Protects the `/api/places` and `/api/users` routes.
+- **Admin Middleware:** Restricts `/api/users` routes to users with the `ADMIN` role.
 - **Global Exception Handler:** Handles errors and exceptions globally.
 
 ## Project Structure
@@ -82,6 +106,8 @@ app/
       places.service.js
     users/
       users.schema.js
+      users.service.js
+      users.routes.js
   routes/
     api.js
 ```
