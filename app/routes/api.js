@@ -7,7 +7,7 @@ const api = express();
 
 api.get('/', (req, res) => {
     console.log(req.query);
-    res.send('api base route');
+    res.json({ message: 'Api base route' });
 });
 
 api.use('/places', places);
