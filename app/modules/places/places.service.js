@@ -10,7 +10,7 @@ export async function show(req, res) {
     const Place = mongoose.model('Place');
     const place = await Place.findById(req.params.id);
     if (!place) {
-        return res.status(404).send('Place not found');
+        return res.status(404).json({ message: 'Place not found' });
     }
     res.status(200).json(place);
 }
@@ -33,7 +33,7 @@ export async function update(req, res) {
         { new: true }
     );
     if (!updatedPlace) {
-        return res.status(404).send('Place not found');
+        return res.status(404).json({ message: 'Place not found' });
     }
     res.status(200).json(updatedPlace);
 }
@@ -42,7 +42,7 @@ export async function destroy(req, res) {
     const Place = mongoose.model('Place');
     const deletedPlace = await Place.findByIdAndDelete(req.params.id);
     if (!deletedPlace) {
-        return res.status(404).send('Place not found');
+        return res.status(404).json({ message: 'Place not found' });
     }
     res.status(200).json({ message: 'Place deleted successfully' });
 }

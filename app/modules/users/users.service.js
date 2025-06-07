@@ -9,7 +9,7 @@ export async function index(_req, res) {
 export async function show(req, res) {
   const user = await User.findById(req.params.id, '-password');
   if (!user) {
-    return res.status(404).send('User not found');
+    return res.status(404).json({ message: 'User not found' });
   }
   res.status(200).json(user);
 }
@@ -40,7 +40,7 @@ export async function update(req, res) {
     { new: true, runValidators: true, select: '-password' }
   );
   if (!updatedUser) {
-    return res.status(404).send('User not found');
+    return res.status(404).json({ message: 'User not found' });
   }
   res.status(200).json(updatedUser);
 }
@@ -48,7 +48,7 @@ export async function update(req, res) {
 export async function destroy(req, res) {
   const deletedUser = await User.findByIdAndDelete(req.params.id);
   if (!deletedUser) {
-    return res.status(404).send('User not found');
+    return res.status(404).json({ message: 'User not found' });
   }
   res.status(200).json({ message: 'User deleted successfully' });
 }
