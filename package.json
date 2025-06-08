@@ -1,7 +1,7 @@
 {
-  "name": "api-node-express",
+  "name": "back-to-node-and-express-five-years-later",
   "version": "1.0.0",
-  "description": "",
+  "description": " A Node and Express project featuring modern practices and dependencies.",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon --inspect index.js"
