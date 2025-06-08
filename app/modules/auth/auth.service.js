@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import crypto from 'crypto';
 import User from '../../modules/users/users.schema.js';
 
 export async function register(req, res) {
@@ -42,4 +43,33 @@ export function auth(req, res, next) {
     req.user = user;
     next();
   });
+}
+
+export async function passwordResetToken(req, res) {
+  const user = await User.findOne({ username: req.body.username });
+  if (!user) {
+    return res.status(200).json({ message: 'If the user exists, a reset link will be sent.' });
+  }
+  const token = crypto.randomBytes(32).toString('hex');
+  const expiresIn = Date.now() + 3600000;
+  user.token = token;
+  user.expiresIn = expiresIn;
+  await user.save();
+  //TODO: Send resetToken via email to user
+  res.json({ message: 'Password reset token generated.', token });
+}
+
+export async function resetPassword(req, res) {
+  const user = await User.findOne({
+    resetPasswordToken: req.body.token,
+    resetPasswordExpires: { $gt: Date.now() }
+  });
+  if (!user) {
+    return res.status(400).json({ message: 'Invalid or expired token.' });
+  }
+  user.password = await bcrypt.hash(req.body.newPassword, 10);
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpires = undefined;
+  await user.save();
+  res.json({ message: 'Password has been reset successfully.' });
 }

@@ -90,6 +90,17 @@ The main purpose of this application is to provide a backend API for user authen
   - Deletes a place by ID.
   - Requires: Auth token
 
+### Password Reset
+- `POST /api/password/reset/request`
+  - Request a password reset token for a user.
+  - Body: `{ username }`
+  - Returns: Success message (token is returned in response for testing; in production, it should be emailed).
+
+- `POST /api/password/reset`
+  - Reset a user's password using a valid reset token.
+  - Body: `{ token, newPassword }`
+  - Returns: Success message or error if token is invalid/expired.
+
 ## Middleware
 - **Authentication Middleware:** Protects the `/api/places` and `/api/users` routes. Sets `req.user` with user info and role from JWT.
 - **Admin Middleware:** Restricts `/api/users` routes to users with the `ADMIN` role.
