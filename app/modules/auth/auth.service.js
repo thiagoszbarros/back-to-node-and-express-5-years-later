@@ -46,7 +46,7 @@ export async function passwordResetToken(req, res) {
   res.json({ message: 'Password reset token generated.', token });
 }
 
-export async function resetPassword(req, res) {
+export async function passwordReset(req, res) {
   const user = await User.findOne({
     token: req.body.token,
     expiresIn: { $gt: Date.now() }
