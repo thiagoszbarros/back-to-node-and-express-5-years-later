@@ -34,21 +34,15 @@ export async function update(req, res) {
   if (req.body.role) {
     updateFields.role = req.body.role
   };
-  const updatedUser = await User.findByIdAndUpdate(
+  User.findByIdAndUpdate(
     req.params.id,
     updateFields,
     { new: true, runValidators: true, select: '-password' }
   );
-  if (!updatedUser) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  res.status(200).json(updatedUser);
+  res.status(204).send();
 }
 
 export async function destroy(req, res) {
-  const deletedUser = await User.findByIdAndDelete(req.params.id);
-  if (!deletedUser) {
-    return res.status(404).json({ message: 'User not found' });
-  }
-  res.status(200).json({ message: 'User deleted successfully' });
+  User.findByIdAndDelete(req.params.id);
+  res.status(204).send();
 }
