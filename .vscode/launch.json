@@ -1,14 +1,12 @@
 {
+    "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch API",
+            "name": "Back to node and express 5 years later",
             "type": "node",
-            "request": "launch",
+            "request": "attach",
+            "restart": true,
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}/server.js",
-            "env": {
-                "NODE_ENV": "development"
-            }
         }
     ]
 }
