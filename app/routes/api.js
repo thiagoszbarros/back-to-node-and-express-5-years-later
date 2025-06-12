@@ -5,8 +5,7 @@ import users from '../modules/users/users.routes.js';
 
 const api = express();
 
-api.get('/', (req, res) => {
-    console.log(req.query);
+api.get('/', (_req, res) => {
     res.json({ message: 'Api base route' });
 });
 
