@@ -7,11 +7,19 @@ export async function index(_req, res) {
 }
 
 export async function show(req, res) {
-  const user = await User.findById(req.params.id, '-password');
+  const user = await User
+    .findById(req
+      .params
+      .id, '-password'
+    );
   if (!user) {
-    return res.status(404).json({ message: 'User not found' });
+    return res
+      .status(404)
+      .json(user);
   }
-  res.status(200).json(user);
+  res
+    .status(200)
+    .json(user);
 }
 
 export async function store(req, res) {
