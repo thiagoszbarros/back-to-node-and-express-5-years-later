@@ -114,6 +114,42 @@ describe('usersService', () => {
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
     });
+    it('should update only username if only username is present', async () => {
+      req.body = { username: 'updated' };
+      req.params.id = '123';
+      await service.update(req, res);
+      expect(mockUserSchema.findByIdAndUpdate).toHaveBeenCalledWith(
+        '123',
+        { username: 'updated' },
+        { new: true, runValidators: true, select: '-password' }
+      );
+      expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.send).toHaveBeenCalled();
+    });
+    it('should update only role if only role is present', async () => {
+      req.body = { role: 'admin' };
+      req.params.id = '123';
+      await service.update(req, res);
+      expect(mockUserSchema.findByIdAndUpdate).toHaveBeenCalledWith(
+        '123',
+        { role: 'admin' },
+        { new: true, runValidators: true, select: '-password' }
+      );
+      expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.send).toHaveBeenCalled();
+    });
+    it('should update nothing if neither username nor role is present', async () => {
+      req.body = {};
+      req.params.id = '123';
+      await service.update(req, res);
+      expect(mockUserSchema.findByIdAndUpdate).toHaveBeenCalledWith(
+        '123',
+        {},
+        { new: true, runValidators: true, select: '-password' }
+      );
+      expect(res.status).toHaveBeenCalledWith(204);
+      expect(res.send).toHaveBeenCalled();
+    });
   });
 
   describe('destroy', () => {
