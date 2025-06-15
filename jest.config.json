@@ -1,0 +1,7 @@
+{
+  "testEnvironment": "node",
+  "transform": {},
+  "moduleFileExtensions": ["js", "json", "node"],
+  "globals": {},
+  "verbose": true
+}

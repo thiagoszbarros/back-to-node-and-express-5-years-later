@@ -4,12 +4,14 @@
   "description": "A Node and Express project featuring modern practices and dependencies.",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --inspect index.js"
+    "dev": "nodemon --inspect index.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^30.0.0",
     "nodemon": "^3.1.10"
   },
   "dependencies": {
