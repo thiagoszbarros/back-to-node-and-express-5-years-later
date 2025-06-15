@@ -1,5 +1,5 @@
 import express from 'express';
-import api from './src/infraestructure/routes/api.js';
+import api from './src/infraestructure/routes/api.routes.js';
 import 'dotenv/config'
 import { globalExceptionHandler } from './src/infraestructure/middlewares/global-exception-handler.midleware.js';
 
