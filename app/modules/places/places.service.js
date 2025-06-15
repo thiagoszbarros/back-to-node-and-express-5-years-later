@@ -1,38 +1,45 @@
-import Place from './places.schema.js';
-
-export async function index(_req, res) {
-    const places = await Place.find();
+function placesService(dependencies = {}) {
+  async function index(_req, res) {
+    const places = await dependencies.repository.find();
     res.status(200).json(places);
-}
+  }
 
-export async function show(req, res) {
-    const place = await Place.findById(req.params.id);
+  async function show(req, res) {
+    const place = await dependencies.repository.findById(req.params.id);
     if (!place) {
-        return res.status(404).json({ message: 'Place not found' });
+      return res.status(404).json({ message: 'Place not found' });
     }
     res.status(200).json(place);
-}
+  }
 
-export async function store(req, res) {
-    const newPlace = new Place({
-        name: req.body.name,
-        address: req.body.address,
-    });
-    await newPlace.save();
-    res.status(201).json(newPlace);
-}
+  async function store(req, res) {
+    const { name, address } = req.body;
+    const place = new dependencies.repository({ name, address });
+    await place.save();
+    res.status(201).json(place);
+  }
 
-export async function update(req, res) {
-    Place.findByIdAndUpdate(
-        req.params.id,
-        { name: req.body.name, address: req.body.address },
-        { new: true }
+  async function update(req, res) {
+    await dependencies.repository.findByIdAndUpdate(
+      req.params.id,
+      { name: req.body.name, address: req.body.address },
+      { new: true, runValidators: true }
     );
-
     res.status(204).send();
+  }
+
+  async function destroy(req, res) {
+    await dependencies.repository.findByIdAndDelete(req.params.id);
+    res.status(204).send();
+  }
+
+  return {
+    index,
+    show,
+    store,
+    update,
+    destroy
+  };
 }
 
-export async function destroy(req, res) {
-    Place.findByIdAndDelete(req.params.id);
-    res.status(204).send();
-}
+export default placesService;

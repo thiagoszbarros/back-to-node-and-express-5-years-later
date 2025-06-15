@@ -1,19 +1,23 @@
 import express from 'express';
-import './places.schema.js';
-import { index, show, store, update, destroy } from './places.service.js';
+import Place from './places.schema.js';
+import placesService from './places.service.js';
 import '../mongodb/mongodb.service.js';
 import { auth } from '../../middlewares/auth.midleware.js';
 
 const places = express();
 
-places.get('/', auth, index);
+const service = placesService({
+    repository: Place
+});
 
-places.get('/:id', auth, show);
+places.get('/', auth, service.index);
 
-places.post('/', auth, store);
+places.get('/:id', auth, service.show);
 
-places.put('/:id', auth, update);
+places.post('/', auth, service.store);
 
-places.delete('/:id', auth, destroy);
+places.put('/:id', auth, service.update);
+
+places.delete('/:id', auth, service.destroy);
 
 export default places;
