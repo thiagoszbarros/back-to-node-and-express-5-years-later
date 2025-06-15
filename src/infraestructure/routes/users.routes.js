@@ -2,9 +2,9 @@ import express from 'express';
 import usersService from '../../app/users/users.service.js';
 import { auth } from '../middlewares/auth.midleware.js';
 import { admin } from '../middlewares/admin.midleware.js';
-import { createUserRequest } from '../../app/users/create-user.request.js';
-import { updateUserRequest } from '../../app/users/update-user.request.js';
-import User from '../../app/users/users.schema.js';
+import { createUserRequest } from '../requests/users/create-user.request.js';
+import { updateUserRequest } from '../requests/users/update-user.request.js';
+import User from '../schemas/users.schema.js';
 import bcrypt from 'bcrypt';
 
 const users = express();

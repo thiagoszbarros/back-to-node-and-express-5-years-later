@@ -1,7 +1,7 @@
 import express from 'express';
-import places from '../modules/places/places.routes.js';
-import auth from '../modules/auth/auth.routes.js';
-import users from '../modules/users/users.routes.js';
+import places from './places.routes.js';
+import auth from './auth.routes.js';
+import users from './users.routes.js';
 
 const api = express();
 

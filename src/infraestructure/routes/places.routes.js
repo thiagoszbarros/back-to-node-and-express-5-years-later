@@ -1,8 +1,8 @@
 import express from 'express';
-import Place from '../../app/places/places.schema.js';
+import Place from '../schemas/places.schema.js';
 import placesService from '../../app/places/places.service.js';
 import '../db/mongodb.service.js';
-import { auth } from '../../middlewares/auth.midleware.js';
+import { auth } from '../middlewares/auth.midleware.js';
 
 const places = express();
 
