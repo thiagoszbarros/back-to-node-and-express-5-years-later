@@ -1,4 +1,4 @@
-function usersService(dependencies = {}) {
+function usersService(dependencies) {
   async function index(_req, res) {
     const users = await dependencies
       .repository

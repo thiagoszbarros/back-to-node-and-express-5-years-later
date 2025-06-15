@@ -1,4 +1,4 @@
-function authService(dependencies = {}) {
+function authService(dependencies) {
   async function register(req, res) {
     const { username, password } = req.body;
     if (!username || !password) {

@@ -95,6 +95,12 @@ describe('placesService', () => {
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
     });
+    it('should handle error if update fails', async () => {
+      req.body = { name: 'B', address: 'Addr2' };
+      req.params.id = '123';
+      mockPlaceSchema.findByIdAndUpdate.mockRejectedValue(new Error('Update failed'));
+      await expect(service.update(req, res)).rejects.toThrow('Update failed');
+    });
   });
 
   describe('destroy', () => {
@@ -104,6 +110,11 @@ describe('placesService', () => {
       expect(mockPlaceSchema.findByIdAndDelete).toHaveBeenCalledWith('123');
       expect(res.status).toHaveBeenCalledWith(204);
       expect(res.send).toHaveBeenCalled();
+    });
+    it('should handle error if destroy fails', async () => {
+      req.params.id = '123';
+      mockPlaceSchema.findByIdAndDelete.mockRejectedValue(new Error('Delete failed'));
+      await expect(service.destroy(req, res)).rejects.toThrow('Delete failed');
     });
   });
 });

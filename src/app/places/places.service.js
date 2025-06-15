@@ -1,4 +1,4 @@
-function placesService(dependencies = {}) {
+function placesService(dependencies) {
   async function index(_req, res) {
     const places = await dependencies.repository.find();
     res.status(200).json(places);
