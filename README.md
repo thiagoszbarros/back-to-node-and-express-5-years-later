@@ -6,6 +6,35 @@ This is a RESTful API built with Node.js and Express. It provides authentication
 
 The main purpose of this application is to provide a backend API for user authentication, user management (with roles), and management of places, with secure access to protected resources.
 
+## Test Coverage
+
+```
+--------------------|---------|----------|---------|---------|------------------
+File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+--------------------|---------|----------|---------|---------|------------------
+All files           |     100 |      100 |     100 |     100 |                  
+ app/auth           |     100 |      100 |     100 |     100 |                  
+  auth.service.js   |     100 |      100 |     100 |     100 |                  
+ app/places         |     100 |      100 |     100 |     100 |                  
+  places.service.js |     100 |      100 |     100 |     100 |                  
+ app/users          |     100 |      100 |     100 |     100 |                  
+  users.service.js  |     100 |      100 |     100 |     100 |                  
+ domain/users       |     100 |      100 |     100 |     100 |                  
+  roles.js          |     100 |      100 |     100 |     100 |                  
+--------------------|---------|----------|---------|---------|------------------
+Test Suites: 4 passed, 4 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        ~1 s
+Ran all test suites.
+```
+
+The project is fully covered by automated tests. Coverage is generated using Jest and can be viewed in detail in the `coverage/lcov-report/index.html` file after running:
+
+```sh
+npm run coverage
+```
+
 ## Getting Started
 
 1. **Install dependencies:**
