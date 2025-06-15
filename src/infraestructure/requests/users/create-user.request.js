@@ -1,4 +1,4 @@
-import { Roles } from './roles.js';
+import { Roles } from '../../../domain/users/roles.js';
 
 export function createUserRequest(req, res, next) {
   const { username, password, role } = req.body;

@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
-import User from '../../modules/users/users.schema.js';
+import User from '../../infraestructure/schemas/users.schema.js';
 
 export async function register(req, res) {
   const { username, password } = req.body;

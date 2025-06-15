@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { Roles } from './roles.js';
+import { Roles } from '../../domain/users/roles.js';
 const { Schema } = mongoose;
 
 const userSchema = new Schema({

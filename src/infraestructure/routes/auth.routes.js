@@ -1,7 +1,7 @@
 import express from 'express';
-import { register, login, passwordResetToken, passwordReset } from './auth.service.js';
-import { passwordResetRequest } from './password-reset.request.js';
-import { passwordResetTokenRequest, } from './password-reset-token.request.js';
+import { register, login, passwordResetToken, passwordReset } from '../../app/auth/auth.service.js';
+import { passwordResetRequest } from '../requests/auth/password-reset.request.js';
+import { passwordResetTokenRequest, } from '../requests/auth/password-reset-token.request.js';
 
 const auth = express();
 

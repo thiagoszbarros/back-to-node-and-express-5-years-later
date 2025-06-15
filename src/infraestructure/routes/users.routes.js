@@ -1,10 +1,10 @@
 import express from 'express';
-import usersService from './users.service.js';
-import { auth } from '../../middlewares/auth.midleware.js';
-import { admin } from '../../middlewares/admin.midleware.js';
-import { createUserRequest } from './create-user.request.js';
-import { updateUserRequest } from './update-user.request.js';
-import User from './users.schema.js';
+import usersService from '../../app/users/users.service.js';
+import { auth } from '../middlewares/auth.midleware.js';
+import { admin } from '../middlewares/admin.midleware.js';
+import { createUserRequest } from '../../app/users/create-user.request.js';
+import { updateUserRequest } from '../../app/users/update-user.request.js';
+import User from '../../app/users/users.schema.js';
 import bcrypt from 'bcrypt';
 
 const users = express();

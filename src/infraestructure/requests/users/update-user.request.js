@@ -1,4 +1,4 @@
-import { Roles } from './roles.js';
+import { Roles } from '../../../app/users/roles.js';
 
 export function updateUserRequest(req, res, next) {
   const { role } = req.body;
