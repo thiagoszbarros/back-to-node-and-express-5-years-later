@@ -1,4 +1,4 @@
-import { Roles } from '../../modules/users/roles.js';
+import { Roles } from '../../domain/users/roles.js';
 
 export function admin(req, res, next) {
     if (req.user && req.user.role === Roles.ADMIN) {
