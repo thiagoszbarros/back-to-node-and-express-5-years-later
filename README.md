@@ -135,34 +135,57 @@ npm run coverage
 - **Admin Middleware:** Restricts `/api/users` routes to users with the `ADMIN` role.
 - **Request Validation Middleware:** Validates user creation and update requests for required fields and valid roles.
 - **Global Exception Handler:** Handles errors and exceptions globally.
+- **Request/Response Logging Middleware:** Logs all incoming requests and outgoing responses. File: `src/infraestructure/middlewares/log-request-response.middeware.js`
 
 ## Project Structure
 ```
-server.js
-app/
-  middlewares/
-    admin.midleware.js
-    auth.midleware.js
-    global-exception-handler.midleware.js
-  modules/
+src/
+  app/
     auth/
-      auth.routes.js
       auth.service.js
-    mongodb/
-      mongodb.service.js
+      auth.service.test.js
     places/
-      places.routes.js
-      places.schema.js
       places.service.js
+      places.service.test.js
     users/
-      create-user.request.js
-      roles.js
-      update-user.request.js
-      users.routes.js
-      users.schema.js
       users.service.js
-  routes/
-    api.js
+      users.service.test.js
+  domain/
+    users/
+      roles.js
+      roles.test.js
+  infraestructure/
+    db/
+      mongodb.service.js
+    logs/
+      channels.js
+      fileLogger.js
+      levels.js
+      logger.js
+      mongoLogger.js
+    middlewares/
+      admin.midleware.js
+      auth.midleware.js
+      global-exception-handler.midleware.js
+      log-request-response.middeware.js
+    requests/
+      auth/
+        password-reset-token.request.js
+        password-reset.request.js
+      users/
+        create-user.request.js
+        update-user.request.js
+    routes/
+      api.routes.js
+      auth.routes.js
+      places.routes.js
+      users.routes.js
+    schemas/
+      logs.schema.js
+      places.schema.js
+      users.schema.js
+index.js
+package.json
 ```
 
 ## Roles
