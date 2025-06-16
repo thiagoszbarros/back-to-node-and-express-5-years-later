@@ -169,5 +169,58 @@ app/
 - `ADMIN`: Can manage users and places.
 - `USER`: Can access places endpoints only.
 
+## Logging Module
+
+The project includes a flexible logging module that supports logging to both a file and MongoDB. You can configure the logging output using the `LOG_STACK` environment variable.
+
+### Configuration
+
+- **Environment Variable:**
+  - `LOG_STACK`: Comma-separated values to select log outputs. Supported values: `file`, `mongodb`.
+    - Example: `LOG_STACK=file,mongodb` (logs to both file and MongoDB)
+    - Default: `file`
+
+- **File Logging:**
+  - Logs are written to `src/infraestructure/logs/app.log`.
+
+- **MongoDB Logging:**
+  - Logs are stored in the `Log` collection using the schema in `src/infraestructure/schemas/logs.schema.js`.
+  - Requires MongoDB to be configured and running.
+
+### Usage
+
+You can log messages manually or use the built-in middlewares:
+
+#### Manual Logging
+
+Import and use the `logMessage` function:
+
+```js
+import { logMessage } from './src/infraestructure/logs/logger.js';
+
+// Log an info message
+logMessage(200, 'This is an info message');
+
+// Log an error with metadata
+logMessage(500, 'Something went wrong', { userId: '123', action: 'update' });
+```
+
+#### Automatic Logging
+
+- **Request/Response Logging:**
+  - The `requestResponseLogger` middleware logs all incoming requests and outgoing responses.
+  - File: `src/infraestructure/middlewares/log-request-response.middeware.js`
+
+- **Global Exception Logging:**
+  - The `globalExceptionHandler` middleware logs all unhandled errors.
+  - File: `src/infraestructure/middlewares/global-exception-handler.midleware.js`
+
+### Log Levels
+
+Supported log levels (see `src/infraestructure/logs/levels.js`):
+- EMERGENCY, ALERT, CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG
+
+Log level is determined automatically based on HTTP status code, but you can specify it manually if needed.
+
 ## License
 MIT
