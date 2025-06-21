@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Node Express Documentation</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f7f9fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      padding: 40px 32px 32px 32px;
+    }
+    h1, h2, h3, h4 {
+      color: #1a73e8;
+      margin-top: 1.5em;
+    }
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 0.2em;
+    }
+    h2 {
+      font-size: 2em;
+      border-bottom: 2px solid #e3e3e3;
+      padding-bottom: 0.2em;
+    }
+    h3 {
+      font-size: 1.3em;
+      margin-top: 1.2em;
+    }
+    pre, code {
+      background: #f3f3f3;
+      border-radius: 5px;
+      font-size: 1em;
+      padding: 0.2em 0.4em;
+      color: #c7254e;
+    }
+    pre {
+      padding: 1em;
+      overflow-x: auto;
+      margin: 1em 0;
+    }
+    ul, ol {
+      margin-left: 2em;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1em 0;
+    }
+    th, td {
+      border: 1px solid #e3e3e3;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background: #f1f5fb;
+    }
+    .badge {
+      display: inline-block;
+      background: #1a73e8;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.9em;
+      margin-left: 8px;
+    }
+    .code-block {
+      background: #23272e;
+      color: #e3e3e3;
+      border-radius: 6px;
+      padding: 1em;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      font-size: 1em;
+      margin: 1em 0;
+      overflow-x: auto;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>API Node Express</h1>
+    <p>This is a RESTful API built with Node.js and Express. It provides authentication and CRUD operations for managing users and places. The API is structured with modular routes and middleware for authentication, role-based access, and global exception handling.</p>
+    <h2>Purpose</h2>
+    <p>The main purpose of this application is to provide a backend API for user authentication, user management (with roles), and management of places, with secure access to protected resources.</p>
+    <h2>Test Coverage</h2>
+    <pre>
+--------------------|---------|----------|---------|---------|------------------
+File                | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+--------------------|---------|----------|---------|---------|------------------
+All files           |     100 |      100 |     100 |     100 |                  
+ app/auth           |     100 |      100 |     100 |     100 |                  
+  auth.service.js   |     100 |      100 |     100 |     100 |                  
+ app/places         |     100 |      100 |     100 |     100 |                  
+  places.service.js |     100 |      100 |     100 |     100 |                  
+ app/users          |     100 |      100 |     100 |     100 |                  
+  users.service.js  |     100 |      100 |     100 |     100 |                  
+ domain/users       |     100 |      100 |     100 |     100 |                  
+  roles.js          |     100 |      100 |     100 |     100 |                  
+--------------------|---------|----------|---------|---------|------------------
+Test Suites: 4 passed, 4 total
+Tests:       29 passed, 29 total
+Snapshots:   0 total
+Time:        ~1 s
+Ran all test suites.
+    </pre>
+    <p>The project is fully covered by automated tests. Coverage is generated using Jest and can be viewed in detail in the <code>coverage/lcov-report/index.html</code> file after running:</p>
+    <pre>npm run coverage</pre>
+    <h2>Getting Started</h2>
+    <ol>
+      <li><strong>Install dependencies:</strong>
+        <pre>npm install</pre>
+      </li>
+      <li><strong>Set environment variables:</strong>
+        <p>Create a <code>.env</code> file and set the <code>PORT</code>, <code>MONGO_URI</code>, and <code>JWT_SECRET</code> variables.</p>
+      </li>
+      <li><strong>Run the server:</strong>
+        <pre>npm start</pre>
+        <p>The server will run on <code>http://localhost:3000</code> by default.</p>
+      </li>
+    </ol>
+    <h2>Routes</h2>
+    <h3>Base Route</h3>
+    <ul>
+      <li><code>GET /</code> - Returns: <code>hello world</code></li>
+    </ul>
+    <h3>API Base Route</h3>
+    <ul>
+      <li><code>GET /api</code> - Returns: <code>{ message: 'Api base route' }</code></li>
+    </ul>
+    <h3>Authentication</h3>
+    <ul>
+      <li><code>POST /api/register</code> - Registers a new user (role defaults to USER).<br>Body: <code>{ username, password }</code></li>
+      <li><code>POST /api/login</code> - Authenticates a user.<br>Body: <code>{ username, password }</code></li>
+    </ul>
+    <h3>Users (Protected, ADMIN only)</h3>
+    <ul>
+      <li><code>GET /api/users</code> - Returns a list of all users (excluding passwords). Requires: Auth token (ADMIN role)</li>
+      <li><code>GET /api/users/:id</code> - Returns details of a specific user by ID (excluding password). Requires: Auth token (ADMIN role)</li>
+      <li><code>POST /api/users</code> - Creates a new user. Body: <code>{ username, password, role }</code> Requires: Auth token (ADMIN role)</li>
+      <li><code>PUT /api/users/:id</code> - Updates an existing user's username and/or role by ID. Body: <code>{ username?, role? }</code> Requires: Auth token (ADMIN role)</li>
+      <li><code>DELETE /api/users/:id</code> - Deletes a user by ID. Requires: Auth token (ADMIN role)</li>
+    </ul>
+    <h3>Places (Protected, requires authentication)</h3>
+    <ul>
+      <li><code>GET /api/places</code> - Returns a list of places. Requires: Auth token</li>
+      <li><code>GET /api/places/:id</code> - Returns details of a specific place by ID. Requires: Auth token</li>
+      <li><code>POST /api/places</code> - Creates a new place. Body: <code>{ name, address }</code> Requires: Auth token</li>
+      <li><code>PUT /api/places/:id</code> - Updates an existing place by ID. Body: <code>{ name, address }</code> Requires: Auth token</li>
+      <li><code>DELETE /api/places/:id</code> - Deletes a place by ID. Requires: Auth token</li>
+    </ul>
+    <h3>Password Reset</h3>
+    <ul>
+      <li><code>POST /api/password/reset/request</code> - Request a password reset token for a user. Body: <code>{ username }</code></li>
+      <li><code>POST /api/password/reset</code> - Reset a user's password using a valid reset token. Body: <code>{ token, newPassword }</code></li>
+    </ul>
+    <h2>Middleware</h2>
+    <ul>
+      <li><strong>Authentication Middleware:</strong> Protects the <code>/api/places</code> and <code>/api/users</code> routes. Sets <code>req.user</code> with user info and role from JWT.</li>
+      <li><strong>Admin Middleware:</strong> Restricts <code>/api/users</code> routes to users with the <code>ADMIN</code> role.</li>
+      <li><strong>Request Validation Middleware:</strong> Validates user creation and update requests for required fields and valid roles.</li>
+      <li><strong>Global Exception Handler:</strong> Handles errors and exceptions globally.</li>
+      <li><strong>Request/Response Logging Middleware:</strong> Logs all incoming requests and outgoing responses. File: <code>src/infraestructure/middlewares/log-request-response.middeware.js</code></li>
+    </ul>
+    <h2>Project Structure</h2>
+    <pre>
+index.js
+jest.config.json
+package.json
+README.md
+src/
+  app/
+    auth/
+      auth.service.js
+      auth.service.test.js
+    places/
+      places.service.js
+      places.service.test.js
+    users/
+      users.service.js
+      users.service.test.js
+  domain/
+    users/
+      roles.js
+      roles.test.js
+  infraestructure/
+    controllers/
+      auth.controller.js
+      places.controller.js
+      users.controller.js
+    db/
+      mongodb.service.js
+    logs/
+      channels.js
+      fileLogger.js
+      levels.js
+      logger.js
+      mongoLogger.js
+    middlewares/
+      admin.midleware.js
+      auth.midleware.js
+      global-exception-handler.midleware.js
+      log-request-response.middeware.js
+    requests/
+      auth/
+        password-reset-token.request.js
+        password-reset.request.js
+      users/
+        create-user.request.js
+        update-user.request.js
+    routes/
+      api.routes.js
+      auth.routes.js
+      places.routes.js
+      users.routes.js
+    schemas/
+      logs.schema.js
+      places.schema.js
+      users.schema.js
+  tests/
+    </pre>
+    <h2>Roles</h2>
+    <ul>
+      <li><code>ADMIN</code>: Can manage users and places.</li>
+      <li><code>USER</code>: Can access places endpoints only.</li>
+    </ul>
+    <h2>Logging Module</h2>
+    <p>The project includes a flexible logging module that supports logging to both a file and MongoDB. You can configure the logging output using the <code>LOG_STACK</code> environment variable.</p>
+    <h3>Configuration</h3>
+    <ul>
+      <li><strong>Environment Variable:</strong> <code>LOG_STACK</code>: Comma-separated values to select log outputs. Supported values: <code>file</code>, <code>mongodb</code>.<br>Example: <code>LOG_STACK=file,mongodb</code> (logs to both file and MongoDB)<br>Default: <code>file</code></li>
+      <li><strong>File Logging:</strong> Logs are written to <code>src/infraestructure/logs/app.log</code>.</li>
+      <li><strong>MongoDB Logging:</strong> Logs are stored in the <code>Log</code> collection using the schema in <code>src/infraestructure/schemas/logs.schema.js</code>. Requires MongoDB to be configured and running.</li>
+    </ul>
+    <h3>Usage</h3>
+    <p>You can log messages manually or use the built-in middlewares:</p>
+    <h4>Manual Logging</h4>
+    <pre>import { logMessage } from './src/infraestructure/logs/logger.js';
+
+// Log an info message
+logMessage(200, 'This is an info message');
+
+// Log an error with metadata
+logMessage(500, 'Something went wrong', { userId: '123', action: 'update' });
+    </pre>
+    <h4>Automatic Logging</h4>
+    <ul>
+      <li><strong>Request/Response Logging:</strong> The <code>requestResponseLogger</code> middleware logs all incoming requests and outgoing responses. File: <code>src/infraestructure/middlewares/log-request-response.middeware.js</code></li>
+      <li><strong>Global Exception Logging:</strong> The <code>globalExceptionHandler</code> middleware logs all unhandled errors. File: <code>src/infraestructure/middlewares/global-exception-handler.midleware.js</code></li>
+    </ul>
+    <h4>Log Levels</h4>
+    <p>Supported log levels (see <code>src/infraestructure/logs/levels.js</code>):<br>EMERGENCY, ALERT, CRITICAL, ERROR, WARNING, NOTICE, INFO, DEBUG</p>
+    <p>Log level is determined automatically based on HTTP status code, but you can specify it manually if needed.</p>
+    <h2>License</h2>
+    <p>MIT</p>
+  </div>
+</body>
+</html>
