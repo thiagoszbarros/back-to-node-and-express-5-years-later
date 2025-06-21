@@ -6,7 +6,7 @@ import users from './users.routes.js';
 const api = express();
 
 api.get('/', (_req, res) => {
-    res.json({ message: 'Api base route' });
+    res.send();
 });
 
 api.use('/places', places);
