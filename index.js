@@ -14,8 +14,19 @@ app.use(requestResponseLogger);
 
 app.use('/api', api);
 
-app.get('/', (_, res) => {
-  res.send('hello world');
+app.get('/', async (_, res) => {
+  let version = '0.0.0';
+
+  const { execSync } = await import('child_process');
+  
+  try {
+    version = execSync('git describe --tags --abbrev=0').toString().trim();
+  } catch {}
+
+  res.json({
+    message: 'Application is available',
+    version
+  });
 });
 
 app.use(globalExceptionHandler);
