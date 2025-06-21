@@ -1,37 +1,48 @@
 function authService(dependencies) {
-  async function register(req, res) {
-    const { username, password } = req.body;
+  async function register({ username, password }) {
     if (!username || !password) {
-      return res.status(400).json({ message: 'Username and password are required.' });
+      return { status: 400, body: { message: 'Username and password are required.' } };
     }
     const existingUser = await dependencies.repository.findOne({ username });
     if (existingUser) {
-      return res.status(409).json({ message: 'Username already exists.' });
+      return { status: 409, body: { message: 'Username already exists.' } };
     }
     const hashedPassword = await dependencies.encrypter.hash(password, 10);
     const user = new dependencies.repository({ username, password: hashedPassword });
     await user.save();
-    res.status(201).json({ message: 'User registered successfully.' });
+    return { status: 201, body: { message: 'User registered successfully.' } };
   }
 
-  async function login(req, res) {
-    const { username, password } = req.body;
+  async function login({ username, password }) {
     const user = await dependencies.repository.findOne({ username }).select('username password role');
     if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return {
+        status: 401,
+        body: {
+          message: 'Invalid credentials.'
+        }
+      };
     }
     const isMatch = await dependencies.encrypter.compare(password, user.password);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials.' });
+      return {
+        status: 401,
+        body: {
+          message: 'Invalid credentials.'
+        }
+      };
     }
     const token = dependencies.jwtLib.sign({ userId: user._id, username: user.username, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token });
+    return {
+      status: 200,
+      body: { token }
+    };
   }
 
-  async function passwordResetToken(req, res) {
-    const user = await dependencies.repository.findOne({ username: req.body.username });
+  async function passwordResetToken({ username }) {
+    const user = await dependencies.repository.findOne({ username });
     if (!user) {
-      return res.status(200).json({ message: 'If the user exists, a reset link will be sent.' });
+      return { status: 200, body: { message: 'If the user exists, a reset link will be sent.' } };
     }
     const token = dependencies.cryptoLib.randomBytes(32).toString('hex');
     const expiresIn = Date.now() + 3600000;
@@ -39,22 +50,22 @@ function authService(dependencies) {
     user.expiresIn = expiresIn;
     await user.save();
     // TODO: Send resetToken via email to user
-    res.json({ message: 'Password reset token generated.', token });
+    return { status: 200, body: { message: 'Password reset token generated.', token } };
   }
 
-  async function passwordReset(req, res) {
+  async function passwordReset({ token, password }) {
     const user = await dependencies.repository.findOne({
-      token: req.body.token,
+      token,
       expiresIn: { $gt: Date.now() }
     });
     if (!user) {
-      return res.status(400).json({ message: 'Invalid or expired token.' });
+      return { status: 400, body: { message: 'Invalid or expired token.' } };
     }
-    user.password = await dependencies.encrypter.hash(req.body.newPassword, 10);
+    user.password = await dependencies.encrypter.hash(password, 10);
     user.token = undefined;
     user.expiresIn = undefined;
     await user.save();
-    res.json({ message: 'Password has been reset successfully.' });
+    return { status: 200, body: { message: 'Password has been reset successfully.' } };
   }
 
   return {

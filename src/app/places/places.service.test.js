@@ -9,19 +9,8 @@ const mockPlaceSchema = {
   save: fn(),
 };
 
-const mockRes = () => {
-  const res = {};
-  res.status = fn().mockReturnValue(res);
-  res.json = fn().mockReturnValue(res);
-  res.send = fn().mockReturnValue(res);
-  return res;
-};
-
 describe('placesService', () => {
   let service;
-  let req;
-  let res;
-
   beforeEach(() => {
     mockPlaceSchema.find.mockClear();
     mockPlaceSchema.findById.mockClear();
@@ -29,92 +18,75 @@ describe('placesService', () => {
     mockPlaceSchema.findByIdAndDelete.mockClear();
     mockPlaceSchema.save.mockClear();
     service = placesService({ repository: mockPlaceSchema });
-    req = { body: {}, params: {} };
-    res = mockRes();
   });
 
   describe('index', () => {
     it('should return all places', async () => {
       const places = [{ name: 'A' }, { name: 'B' }];
       mockPlaceSchema.find.mockResolvedValue(places);
-      await service.index(req, res);
+      const result = await service.index();
       expect(mockPlaceSchema.find).toHaveBeenCalled();
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(places);
+      expect(result).toEqual(places);
     });
   });
 
   describe('show', () => {
     it('should return a place if found', async () => {
       const place = { name: 'A' };
-      req.params.id = '123';
       mockPlaceSchema.findById.mockResolvedValue(place);
-      await service.show(req, res);
+      const result = await service.show('123');
       expect(mockPlaceSchema.findById).toHaveBeenCalledWith('123');
-      expect(res.status).toHaveBeenCalledWith(200);
-      expect(res.json).toHaveBeenCalledWith(place);
+      expect(result).toEqual(place);
     });
-    it('should return 404 if place not found', async () => {
-      req.params.id = '123';
+    it('should return null if place not found', async () => {
       mockPlaceSchema.findById.mockResolvedValue(null);
-      await service.show(req, res);
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ message: 'Place not found' });
+      const result = await service.show('123');
+      expect(result).toBeNull();
     });
   });
 
   describe('store', () => {
     it('should create a new place', async () => {
-      req.body = { name: 'A', address: 'Addr' };
       const saveMock = fn();
       function Place(data) {
         return { ...data, save: saveMock };
       }
-      Place.find = mockPlaceSchema.find;
-      Place.findById = mockPlaceSchema.findById;
-      Place.findByIdAndUpdate = mockPlaceSchema.findByIdAndUpdate;
-      Place.findByIdAndDelete = mockPlaceSchema.findByIdAndDelete;
-      service = placesService({ repository: Place });
-      await service.store(req, res);
+      const repo = Object.assign(Place, mockPlaceSchema);
+      service = placesService({ repository: repo });
+      const result = await service.store({ name: 'A', address: 'Addr' });
       expect(saveMock).toHaveBeenCalled();
-      expect(res.status).toHaveBeenCalledWith(201);
-      expect(res.json).toHaveBeenCalledWith(expect.objectContaining({ name: 'A', address: 'Addr' }));
+      expect(result.status).toBe(201);
+      expect(result.body).toEqual(expect.objectContaining({ name: 'A', address: 'Addr' }));
     });
   });
 
   describe('update', () => {
     it('should update place fields and return 204', async () => {
-      req.body = { name: 'B', address: 'Addr2' };
-      req.params.id = '123';
-      await service.update(req, res);
+      const result = await service.update('123', { name: 'B', address: 'Addr2' });
       expect(mockPlaceSchema.findByIdAndUpdate).toHaveBeenCalledWith(
         '123',
         { name: 'B', address: 'Addr2' },
         { new: true, runValidators: true }
       );
-      expect(res.status).toHaveBeenCalledWith(204);
-      expect(res.send).toHaveBeenCalled();
+      expect(result.status).toBe(204);
+      expect(result.body).toBeNull();
     });
     it('should handle error if update fails', async () => {
-      req.body = { name: 'B', address: 'Addr2' };
-      req.params.id = '123';
       mockPlaceSchema.findByIdAndUpdate.mockRejectedValue(new Error('Update failed'));
-      await expect(service.update(req, res)).rejects.toThrow('Update failed');
+      await expect(service.update('123', { name: 'B', address: 'Addr2' })).rejects.toThrow('Update failed');
     });
   });
 
   describe('destroy', () => {
     it('should delete place and return 204', async () => {
-      req.params.id = '123';
-      await service.destroy(req, res);
+      const result = await service.destroy('123');
       expect(mockPlaceSchema.findByIdAndDelete).toHaveBeenCalledWith('123');
-      expect(res.status).toHaveBeenCalledWith(204);
-      expect(res.send).toHaveBeenCalled();
+      expect(result.status).toBe(204);
+      expect(result.body).toBeNull();
     });
     it('should handle error if destroy fails', async () => {
-      req.params.id = '123';
       mockPlaceSchema.findByIdAndDelete.mockRejectedValue(new Error('Delete failed'));
-      await expect(service.destroy(req, res)).rejects.toThrow('Delete failed');
+      await expect(service.destroy('123')).rejects.toThrow('Delete failed');
     });
   });
 });

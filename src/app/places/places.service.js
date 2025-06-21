@@ -1,36 +1,32 @@
 function placesService(dependencies) {
-  async function index(_req, res) {
+  async function index() {
     const places = await dependencies.repository.find();
-    res.status(200).json(places);
+    return places;
   }
 
-  async function show(req, res) {
-    const place = await dependencies.repository.findById(req.params.id);
-    if (!place) {
-      return res.status(404).json({ message: 'Place not found' });
-    }
-    res.status(200).json(place);
+  async function show(id) {
+    const place = await dependencies.repository.findById(id);
+    return place;
   }
 
-  async function store(req, res) {
-    const { name, address } = req.body;
+  async function store({ name, address }) {
     const place = new dependencies.repository({ name, address });
     await place.save();
-    res.status(201).json(place);
+    return { status: 201, body: place };
   }
 
-  async function update(req, res) {
+  async function update(id, data) {
     await dependencies.repository.findByIdAndUpdate(
-      req.params.id,
-      { name: req.body.name, address: req.body.address },
+      id,
+      { name: data.name, address: data.address },
       { new: true, runValidators: true }
     );
-    res.status(204).send();
+    return { status: 204, body: null };
   }
 
-  async function destroy(req, res) {
-    await dependencies.repository.findByIdAndDelete(req.params.id);
-    res.status(204).send();
+  async function destroy(id) {
+    await dependencies.repository.findByIdAndDelete(id);
+    return { status: 204, body: null };
   }
 
   return {

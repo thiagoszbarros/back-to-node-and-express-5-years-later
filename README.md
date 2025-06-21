@@ -139,6 +139,10 @@ npm run coverage
 
 ## Project Structure
 ```
+index.js
+jest.config.json
+package.json
+README.md
 src/
   app/
     auth/
@@ -155,6 +159,10 @@ src/
       roles.js
       roles.test.js
   infraestructure/
+    controllers/
+      auth.controller.js
+      places.controller.js
+      users.controller.js
     db/
       mongodb.service.js
     logs/
@@ -184,8 +192,7 @@ src/
       logs.schema.js
       places.schema.js
       users.schema.js
-index.js
-package.json
+tests/
 ```
 
 ## Roles

@@ -1,69 +1,40 @@
 function usersService(dependencies) {
-  async function index(_req, res) {
-    const users = await dependencies
-      .repository
-      .find({}, '-password');
-
-    res.status(200).json(users);
+  async function index() {
+    const users = await dependencies.repository.find({}, '-password');
+    return users;
   }
 
-  async function show(req, res) {
-    const user = await dependencies
-    .repository
-      .findById(req
-        .params
-        .id, '-password'
-      );
-    if (!user) {
-      return res
-        .status(404)
-        .json(user);
-    }
-    res
-      .status(200)
-      .json(user);
+  async function show(id) {
+    const user = await dependencies.repository.findById(id, '-password');
+    return user;
   }
 
-  async function store(req, res) {
-    const { username, password, role } = req.body;
-    const hashedPassword = await dependencies
-      .encrypter
-      .hash(password, 10);
-    const existingUser = await dependencies
-      .repository
-      .findOne({ username });
+  async function store({ username, password, role }) {
+    const hashedPassword = await dependencies.encrypter.hash(password, 10);
+    const existingUser = await dependencies.repository.findOne({ username });
     if (existingUser) {
-      return res.status(409).json({ message: 'Username already exists.' });
+      return { status: 409, body: { message: 'Username already exists.' } };
     }
     const user = new dependencies.repository({ username, password: hashedPassword, role });
     await user.save();
-    res.status(201).json({ message: 'User created successfully.' });
+    return { status: 201, body: { message: 'User created successfully.' } };
   }
 
-  async function update(req, res) {
+  async function update(id, data) {
     const updateFields = {};
-    if (req.body.username) {
-      updateFields.username = req.body.username
-    };
-    if (req.body.role) {
-      updateFields.role = req.body.role
-    };
-    dependencies
-      .repository
-      .findByIdAndUpdate(
-        req.params.id,
-        updateFields,
-        { new: true, runValidators: true, select: '-password' }
-      );
-    res.status(204).send();
+    if (data.username) updateFields.username = data.username;
+    if (data.role) updateFields.role = data.role;
+    await dependencies.repository.findByIdAndUpdate(
+      id,
+      updateFields,
+      { new: true, runValidators: true, select: '-password' }
+    );
+    return { status: 204, body: null };
   }
 
-  async function destroy(req, res) {
-    dependencies
-      .repository
-      .findByIdAndDelete(req.params.id);
-
-    res.status(204).send();
+  async function destroy(id) {
+    await dependencies.repository.findByIdAndDelete(id);
+    return { status: 204, body: null };
   }
 
   return {
@@ -72,7 +43,7 @@ function usersService(dependencies) {
     store,
     update,
     destroy
-  }
+  };
 }
 
 export default usersService;
